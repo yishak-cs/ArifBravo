@@ -6,46 +6,49 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"time"
 
 	arif "github.com/AnaniyaBelew/ArifpayGoPlugin"
 )
 
-const apiKey = ""
-
-var expireDate = time.Now().AddDate(0, 0, 1)
+const apiKey = "my-api-key"
 
 func Deposit(req *arif.PaymentRequest) (string, error) {
+	payment := arif.NewPayment(apiKey, req.ExpireDate)
 
-	payment := arif.NewPayment(apiKey, expireDate)
-
-	fmt.Println("Request sent:", payment)
-
-	paymentRequestBytes, err := json.Marshal(&req)
+	paymentRequestBytes, err := json.Marshal(req)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("marshal error: %w", err)
 	}
-	req.Nonce = fmt.Sprintf("%d", time.Now().UnixNano())
-	req.ExpireDate = payment.ExpireDate
+
+	fmt.Printf("Request payload: %s\n", string(paymentRequestBytes))
+
 	httpreq, err := http.NewRequest("POST", "https://gateway.arifpay.net/api/checkout/session", bytes.NewBuffer(paymentRequestBytes))
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("create request error: %w", err)
 	}
 
 	httpreq.Header.Set("Content-Type", "application/json")
 	httpreq.Header.Set("x-arifpay-key", payment.APIKey)
 
+	fmt.Printf("Request headers: %+v\n", httpreq.Header)
+
 	client := &http.Client{}
 	resp, err := client.Do(httpreq)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("http request error: %w", err)
 	}
-
 	defer resp.Body.Close()
 
 	responseBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("read response error: %w", err)
+	}
+
+	fmt.Printf("Response status: %d\n", resp.StatusCode)
+	fmt.Printf("Response body: %s\n", string(responseBytes))
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("API returned non-200 status code: %d, body: %s", resp.StatusCode, string(responseBytes))
 	}
 
 	return string(responseBytes), nil
