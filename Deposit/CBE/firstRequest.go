@@ -10,7 +10,7 @@ import (
 	arif "github.com/AnaniyaBelew/ArifpayGoPlugin"
 )
 
-const apiKey = "my-api-key"
+const apiKey = ""
 
 func Deposit(req *arif.PaymentRequest) (string, error) {
 	payment := arif.NewPayment(apiKey, req.ExpireDate)

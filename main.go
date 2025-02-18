@@ -86,7 +86,7 @@ func main() {
 		os.Exit(0)
 	}
 	paymentReq := arif.PaymentRequest{
-		Phone:          "251907968056",
+		Phone:          "251912345678",
 		Email:          "Test@gmail.com",
 		Nonce:          nonce,
 		CancelUrl:      "https://example.com",
@@ -143,7 +143,7 @@ func main() {
 
 	cbeDep := cbe.CBERequest{
 		SessionID:   sessionID,
-		PhoneNumber: "0907968056",
+		PhoneNumber: "251912345678",
 		Password:    "cbe123",
 	}
 
