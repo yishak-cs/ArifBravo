@@ -42,20 +42,21 @@ func testTelebirrDeposit() {
 		os.Exit(0)
 	}
 	paymentReq := arif.PaymentRequest{
-		Phone:          "0907968056",
+		Phone:          "251912345678",
 		Nonce:          nonce,
 		Email:          "telebirrTest@gmail.com",
-		CancelUrl:      "http://example.com",
+		CancelUrl:      "https://example.com",
 		ErrorUrl:       "http://error.com",
 		SuccessUrl:     "http://example.com",
-		NotifyUrl:      "https://gateway.arifpay.net/test/callback",
+		NotifyUrl:      "https://example.com",
 		PaymentMethods: []string{"TELEBIRR_USSD"},
-		ExpireDate:     time.Now().AddDate(0, 0, 1),
+		ExpireDate:     time.Date(2025, 2, 28, 3, 45, 27, 0, time.UTC),
 		Items: []interface{}{
 			map[string]interface{}{
-				"name":     "bet",
-				"quantity": 2,
-				"price":    20,
+				"name":        "Bet",
+				"quantity":    1,
+				"price":       2,
+				"description": "Bet on Bravo Bet",
 			},
 		},
 		Beneficiaries: []struct {
@@ -66,7 +67,7 @@ func testTelebirrDeposit() {
 			{
 				AccountNumber: "01320811436100",
 				Bank:          "AWINETAA",
-				Amount:        40.0,
+				Amount:        2.0,
 			},
 		},
 		Lang: "EN",
@@ -79,7 +80,7 @@ func testTelebirrDeposit() {
 	fmt.Println(ResponseStr)
 }
 
-func main() {
+func testCBEDeposit() {
 	nonce, err := generateNonce()
 	if err != nil {
 		fmt.Println("unable to generate nonce", err)
@@ -94,7 +95,7 @@ func main() {
 		SuccessUrl:     "http://example.com",
 		NotifyUrl:      "https://example.com",
 		PaymentMethods: []string{"CBE"},
-		ExpireDate:     time.Date(2025, 2, 39, 29, 45, 27, 0, time.UTC),
+		ExpireDate:     time.Date(2025, 3, 1, 29, 45, 27, 0, time.UTC),
 		Items: []interface{}{
 			map[string]interface{}{
 				"name":        "Bet",
@@ -153,4 +154,8 @@ func main() {
 		os.Exit(0)
 	}
 	fmt.Println(actual)
+}
+
+func main() {
+	testTelebirrDeposit()
 }
